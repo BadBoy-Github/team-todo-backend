@@ -15,7 +15,25 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Routes
+// Health & Root Routes
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'VitaSyn Team ToDo API is running',
+    status: 'success',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
+});
+
+// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/members', require('./routes/members'));
 
