@@ -28,6 +28,20 @@ router.get('/', auth, async (req, res) => {
         await member.save();
       }
     }
+
+    // If user is a member (not admin), do not leak fellow members' phone numbers and email IDs
+    if (req.user.role !== 'admin') {
+      const sanitized = members.map(m => {
+        const obj = m.toObject();
+        if (obj._id.toString() !== req.user.id) {
+          delete obj.phone;
+          delete obj.email;
+        }
+        return obj;
+      });
+      return res.json(sanitized);
+    }
+
     res.json(members);
   } catch (err) {
     console.error(err.message);
