@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const dotenv = require('dotenv');
+const cron = require('node-cron');
+const { sendPendingTaskReminders } = require('./services/emailService');
 
 dotenv.config();
 
@@ -46,9 +48,41 @@ const connectDB = async () => {
     }
     await mongoose.connect(process.env.MONGODB_URI);
     console.log('MongoDB Connected...');
-    
+
     // Seed Admin
     await seedAdmin();
+
+    // ── Email Reminder Scheduler ───────────────────────────────────────────────
+    //
+    // 🧪 DEV / TESTING MODE:
+    //   Runs immediately on every backend startup so you can verify emails work
+    //   right away. Once you've confirmed emails are received correctly, comment
+    //   out the line below (sendPendingTaskReminders()) and keep only the cron.
+    //
+    // 🚀 PRODUCTION MODE:
+    //   Comment out the immediate call below. The cron will fire daily at the
+    //   time configured in REMINDER_CRON_SCHEDULE (default: 10:00 AM server time).
+    // ──────────────────────────────────────────────────────────────────────────
+
+    // DEV: Trigger immediately on startup for testing
+    console.log('[EmailService] 🧪 DEV MODE – Running email check immediately on startup...');
+    sendPendingTaskReminders(); // ← Comment this out once testing is complete
+
+    // PRODUCTION: Daily cron job (keep this always active)
+    const cronSchedule = process.env.REMINDER_CRON_SCHEDULE || '0 10 * * *';
+    if (cron.validate(cronSchedule)) {
+      cron.schedule(cronSchedule, () => {
+        console.log(`[EmailService] ⏰ Cron triggered at ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })} IST`);
+        sendPendingTaskReminders();
+      }, {
+        scheduled: true,
+        timezone: 'Asia/Kolkata' // Ensures cron runs at IST time
+      });
+      console.log(`[EmailService] 📅 Daily reminder cron scheduled: "${cronSchedule}" (IST timezone)`);
+    } else {
+      console.error(`[EmailService] ❌ Invalid cron expression in REMINDER_CRON_SCHEDULE: "${cronSchedule}"`);
+    }
+
   } catch (err) {
     console.error(err.message);
     process.exit(1);
@@ -60,12 +94,12 @@ const seedAdmin = async () => {
     const User = require('./models/User');
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@vitasyn.com';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-    
+
     let admin = await User.findOne({ role: 'admin' });
-    
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(adminPassword, salt);
-    
+
     if (!admin) {
       admin = new User({
         userId: 'admin_vitasyn',
@@ -86,7 +120,7 @@ const seedAdmin = async () => {
   } catch (err) {
     console.error('Error seeding admin:', err.message);
   }
-}
+};
 
 connectDB();
 
