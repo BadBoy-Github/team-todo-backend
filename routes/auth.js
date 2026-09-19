@@ -31,11 +31,11 @@ router.post('/login', async (req, res) => {
       email: user.email
     };
 
-    // 30 minutes expiration
+    // 3 hours expiration
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: '30m' },
+      { expiresIn: '3h' },
       (err, token) => {
         if (err) throw err;
         res.json({ token, user: payload });

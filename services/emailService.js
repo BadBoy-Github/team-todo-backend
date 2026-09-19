@@ -26,26 +26,32 @@ const buildEmailHTML = (member, incompleteTasks) => {
           border-bottom: 1px solid rgba(189,166,247,0.1);
           vertical-align: top;
         ">
-          <span style="
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #bda6f7 0%, #abecda 100%);
-            color: #0f1015;
-            font-size: 11px;
-            font-weight: 800;
-            margin-right: 10px;
-            vertical-align: middle;
-          ">${index + 1}</span>
-          <strong style="color: #f3f4f8; font-size: 14px; vertical-align: middle;">${task.title}</strong>
-          ${
-            task.description
-              ? `<p style="color: #a3a8b8; font-size: 13px; margin: 6px 0 0 34px; line-height: 1.5;">${task.description}</p>`
-              : ''
-          }
+          <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+            <tr>
+              <td style="vertical-align: top; width: 34px; padding-top: 1px;">
+                <div style="
+                  width: 24px;
+                  height: 24px;
+                  border-radius: 50%;
+                  background: linear-gradient(135deg, #bda6f7 0%, #abecda 100%);
+                  color: #0f1015;
+                  font-size: 11px;
+                  font-weight: 800;
+                  line-height: 24px;
+                  text-align: center;
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+                ">${index + 1}</div>
+              </td>
+              <td style="vertical-align: top;">
+                <strong style="color: #f3f4f8; font-size: 14px;">${task.title}</strong>
+                ${
+                  task.description
+                    ? `<p style="color: #a3a8b8; font-size: 13px; margin: 5px 0 0 0; line-height: 1.5;">${task.description}</p>`
+                    : ''
+                }
+              </td>
+            </tr>
+          </table>
         </td>
         <td style="
           padding: 14px 18px;
@@ -53,6 +59,7 @@ const buildEmailHTML = (member, incompleteTasks) => {
           text-align: center;
           vertical-align: middle;
           white-space: nowrap;
+          width: 120px;
         ">
           <span style="
             display: inline-block;
@@ -65,7 +72,7 @@ const buildEmailHTML = (member, incompleteTasks) => {
             font-weight: 700;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-          ">⏳ Pending</span>
+          ">Pending</span>
         </td>
       </tr>`
     )
@@ -80,7 +87,7 @@ const buildEmailHTML = (member, incompleteTasks) => {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pending Tasks Reminder – VitaSyn</title>
+  <title>Pending Tasks Reminder - VitaSyn</title>
 </head>
 <body style="
   margin: 0;
@@ -90,7 +97,6 @@ const buildEmailHTML = (member, incompleteTasks) => {
   -webkit-font-smoothing: antialiased;
   color: #f3f4f8;
 ">
-  <!-- Ambient background layer -->
   <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #0f1015; min-height: 100vh;">
     <tr>
       <td align="center" style="padding: 40px 16px;">
@@ -98,7 +104,7 @@ const buildEmailHTML = (member, incompleteTasks) => {
         <!-- Email Container -->
         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width: 600px;">
 
-          <!-- ── HEADER ── -->
+          <!-- HEADER -->
           <tr>
             <td style="
               background: linear-gradient(135deg, #151720 0%, #1c1e2b 100%);
@@ -107,64 +113,28 @@ const buildEmailHTML = (member, incompleteTasks) => {
               border-radius: 20px 20px 0 0;
               padding: 32px 36px 28px;
               text-align: center;
-              position: relative;
             ">
-              <!-- Logo + Brand -->
+              <!-- Brand Name only (no logo/icon) -->
               <div style="margin-bottom: 20px;">
-                <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
-                  <tr>
-                    <td style="vertical-align: middle; padding-right: 12px;">
-                      <div style="
-                        width: 48px;
-                        height: 48px;
-                        border-radius: 14px;
-                        background: rgba(189,166,247,0.08);
-                        border: 1px solid rgba(189,166,247,0.3);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        box-shadow: 0 0 20px rgba(189,166,247,0.2);
-                      ">
-                        <!-- VS Monogram -->
-                        <span style="
-                          font-size: 18px;
-                          font-weight: 900;
-                          background: linear-gradient(135deg, #bda6f7 0%, #abecda 100%);
-                          -webkit-background-clip: text;
-                          -webkit-text-fill-color: transparent;
-                          background-clip: text;
-                          line-height: 1;
-                        ">VS</span>
-                      </div>
-                    </td>
-                    <td style="vertical-align: middle;">
-                      <div style="text-align: left; line-height: 1;">
-                        <span style="
-                          font-size: 26px;
-                          font-weight: 900;
-                          letter-spacing: -0.5px;
-                          color: #ffffff;
-                        ">Vita</span><span style="
-                          font-size: 26px;
-                          font-weight: 900;
-                          letter-spacing: -0.5px;
-                          background: linear-gradient(135deg, #bda6f7 0%, #9374eb 100%);
-                          -webkit-background-clip: text;
-                          -webkit-text-fill-color: transparent;
-                          background-clip: text;
-                        ">Syn</span>
-                        <br/>
-                        <span style="
-                          font-size: 9px;
-                          font-weight: 800;
-                          text-transform: uppercase;
-                          letter-spacing: 2.5px;
-                          color: #646b80;
-                        ">VitaSyn Pvt Ltd</span>
-                      </div>
-                    </td>
-                  </tr>
-                </table>
+                <span style="
+                  font-size: 26px;
+                  font-weight: 900;
+                  letter-spacing: -0.5px;
+                  color: #ffffff;
+                ">Vita</span><span style="
+                  font-size: 26px;
+                  font-weight: 900;
+                  letter-spacing: -0.5px;
+                  color: #bda6f7;
+                ">Syn</span>
+                <br/>
+                <span style="
+                  font-size: 9px;
+                  font-weight: 800;
+                  text-transform: uppercase;
+                  letter-spacing: 2.5px;
+                  color: #646b80;
+                ">VitaSyn Pvt Ltd</span>
               </div>
 
               <!-- Gradient Divider -->
@@ -174,22 +144,7 @@ const buildEmailHTML = (member, incompleteTasks) => {
                 margin: 0 -36px 24px;
               "></div>
 
-              <!-- Alert Icon -->
-              <div style="
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 64px;
-                height: 64px;
-                border-radius: 20px;
-                background: linear-gradient(135deg, rgba(189,166,247,0.15) 0%, rgba(171,236,218,0.08) 100%);
-                border: 1px solid rgba(189,166,247,0.3);
-                box-shadow: 0 0 28px rgba(189,166,247,0.2);
-                margin-bottom: 18px;
-              ">
-                <span style="font-size: 28px;">📋</span>
-              </div>
-
+              <!-- Heading -->
               <h1 style="
                 margin: 0 0 10px;
                 font-size: 24px;
@@ -199,21 +154,11 @@ const buildEmailHTML = (member, incompleteTasks) => {
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
                 letter-spacing: -0.3px;
-              ">You have pending tasks, ${firstName}!</h1>
-
-              <p style="
-                margin: 0;
-                font-size: 14px;
-                color: #a3a8b8;
-                line-height: 1.6;
-              ">
-                This is your daily task reminder from <strong style="color: #bda6f7;">VitaSyn Team ToDo</strong>.<br/>
-                You currently have <strong style="color: #abecda;">${taskCount} pending ${taskWord}</strong> waiting for your attention.
-              </p>
+              ">Pending Tasks Reminder</h1>
             </td>
           </tr>
 
-          <!-- ── BODY ── -->
+          <!-- BODY -->
           <tr>
             <td style="
               background: #151720;
@@ -222,50 +167,37 @@ const buildEmailHTML = (member, incompleteTasks) => {
               padding: 32px 36px;
             ">
 
-              <!-- Greeting -->
-              <p style="margin: 0 0 24px; font-size: 15px; color: #f3f4f8; line-height: 1.7;">
-                Hey <strong style="
+              <!-- Greeting / Main Message -->
+              <p style="margin: 0 0 8px; font-size: 15px; color: #f3f4f8; line-height: 1.7;">
+                Hi <strong style="
                   background: linear-gradient(135deg, #d6c7fb 0%, #abecda 100%);
                   -webkit-background-clip: text;
                   -webkit-text-fill-color: transparent;
                   background-clip: text;
-                ">${firstName}</strong> 👋,
+                ">${firstName}</strong>,
               </p>
               <p style="margin: 0 0 28px; font-size: 14px; color: #a3a8b8; line-height: 1.7;">
-                We noticed you still have <strong style="color: #bda6f7;">${taskCount} incomplete ${taskWord}</strong> on your dashboard. 
-                Every task you complete brings the whole team closer to success — you've got this! 💪
+                You have <strong style="color: #bda6f7;">${taskCount} pending ${taskWord}</strong>.
+                Every task you complete brings the whole team closer to success &mdash; you've got this!
               </p>
-
-              <!-- Stats Summary Card -->
-              <div style="
-                background: linear-gradient(135deg, rgba(189,166,247,0.06) 0%, rgba(171,236,218,0.04) 100%);
-                border: 1px solid rgba(189,166,247,0.2);
-                border-radius: 16px;
-                padding: 20px 24px;
-                margin-bottom: 28px;
-                text-align: center;
-              ">
-                <p style="margin: 0 0 4px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #646b80;">Pending Tasks Count</p>
-                <p style="margin: 0; font-size: 42px; font-weight: 900; background: linear-gradient(135deg, #bda6f7 0%, #abecda 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.1;">${taskCount}</p>
-                <p style="margin: 4px 0 0; font-size: 13px; color: #a3a8b8;">task${taskCount !== 1 ? 's' : ''} awaiting completion</p>
-              </div>
 
               <!-- Task Section Heading -->
-              <p style="
-                margin: 0 0 12px;
-                font-size: 12px;
-                font-weight: 800;
-                text-transform: uppercase;
-                letter-spacing: 2px;
-                color: #646b80;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-              ">
-                <span style="display: inline-block; width: 24px; height: 1px; background: rgba(189,166,247,0.4); vertical-align: middle; margin-right: 8px;"></span>
-                Your Pending Tasks
-                <span style="display: inline-block; width: 24px; height: 1px; background: rgba(171,236,218,0.4); vertical-align: middle; margin-left: 8px;"></span>
-              </p>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 12px;">
+                <tr>
+                  <td style="width: 24px; height: 1px; background: rgba(189,166,247,0.4);"></td>
+                  <td style="
+                    padding: 0 12px;
+                    font-size: 11px;
+                    font-weight: 800;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    color: #646b80;
+                    white-space: nowrap;
+                    text-align: center;
+                  ">Your Pending Tasks</td>
+                  <td style="width: 24px; height: 1px; background: rgba(171,236,218,0.4);"></td>
+                </tr>
+              </table>
 
               <!-- Tasks Table -->
               <table width="100%" cellpadding="0" cellspacing="0" border="0" style="
@@ -311,9 +243,9 @@ const buildEmailHTML = (member, incompleteTasks) => {
                 padding: 16px 20px;
                 margin-bottom: 28px;
               ">
-                <p style="margin: 0 0 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #58cfad;">✨ Daily Motivation</p>
+                <p style="margin: 0 0 6px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #58cfad;">Daily Motivation</p>
                 <p style="margin: 0; font-size: 14px; color: #f3f4f8; line-height: 1.6; font-style: italic;">
-                  "The secret of getting ahead is getting started. Mark your tasks done one by one — progress, no matter how small, is still progress!"
+                  "The secret of getting ahead is getting started. Mark your tasks done one by one &mdash; progress, no matter how small, is still progress!"
                 </p>
               </div>
 
@@ -330,7 +262,7 @@ const buildEmailHTML = (member, incompleteTasks) => {
                   border-radius: 14px;
                   letter-spacing: 0.3px;
                   box-shadow: 0 4px 20px rgba(189,166,247,0.3), 0 2px 8px rgba(171,236,218,0.2);
-                ">🚀 Go to My Dashboard</a>
+                ">Go to My Dashboard</a>
               </div>
 
               <p style="text-align: center; margin: 14px 0 0; font-size: 12px; color: #646b80;">
@@ -339,7 +271,7 @@ const buildEmailHTML = (member, incompleteTasks) => {
             </td>
           </tr>
 
-          <!-- ── FOOTER ── -->
+          <!-- FOOTER -->
           <tr>
             <td style="
               background: linear-gradient(135deg, #151720 0%, #1c1e2b 100%);
@@ -360,7 +292,7 @@ const buildEmailHTML = (member, incompleteTasks) => {
               <p style="margin: 0 0 6px; font-size: 13px; font-weight: 700; color: #a3a8b8;">
                 <span style="color: #ffffff;">Vita</span><span style="color: #bda6f7;">Syn</span> Team ToDo
               </p>
-              <p style="margin: 0 0 12px; font-size: 11px; color: #646b80; letter-spacing: 0.5px;">VitaSyn Pvt Ltd · Automated Reminder System</p>
+              <p style="margin: 0 0 12px; font-size: 11px; color: #646b80; letter-spacing: 0.5px;">VitaSyn Pvt Ltd &middot; Automated Reminder System</p>
 
               <a href="https://vitasyn-team-todo.vercel.app/" style="
                 display: inline-block;
@@ -381,7 +313,6 @@ const buildEmailHTML = (member, incompleteTasks) => {
           </tr>
 
         </table>
-        <!-- End Email Container -->
 
       </td>
     </tr>
@@ -398,18 +329,24 @@ const buildEmailText = (member, incompleteTasks) => {
 
   return `Hi ${member.name},
 
-You have ${incompleteTasks.length} pending task(s) on VitaSyn Team ToDo:
+You have ${incompleteTasks.length} pending task(s). Every task you complete brings the whole team closer to success - you've got this!
 
+Your Pending Tasks:
 ${taskList}
 
-Please log in and complete your tasks:
-https://vitasyn-team-todo.vercel.app/
+Daily Motivation:
+"The secret of getting ahead is getting started. Mark your tasks done one by one - progress, no matter how small, is still progress!"
 
-Keep up the great work!
+Go to My Dashboard: https://vitasyn-team-todo.vercel.app/
+Log in to your dashboard and mark your tasks as complete.
 
 ---
+VitaSyn Team ToDo
+VitaSyn Pvt Ltd - Automated Reminder System
+vitasyn-team-todo.vercel.app
+
 This is an auto-generated admin email from VitaSyn Pvt Ltd.
-VitaSyn Team ToDo | https://vitasyn-team-todo.vercel.app/
+Please do not reply to this email. For support, contact your administrator.
 `;
 };
 
@@ -417,30 +354,30 @@ VitaSyn Team ToDo | https://vitasyn-team-todo.vercel.app/
 const sendPendingTasksReminder = async (member, transporter) => {
   const incompleteTasks = member.tasks.filter((t) => t.status === 'incomplete');
 
-  if (incompleteTasks.length === 0) return false; // nothing to send
+  if (incompleteTasks.length === 0) return false;
 
   const mailOptions = {
-    from: `"VitaSyn Team ToDo 📋" <${process.env.EMAIL_USER}>`,
+    from: `"VitaSyn Team ToDo" <${process.env.EMAIL_USER}>`,
     to: member.email,
-    subject: `⏳ You have ${incompleteTasks.length} pending task${incompleteTasks.length !== 1 ? 's' : ''} – VitaSyn ToDo`,
+    subject: `Pending Tasks Reminder - ${incompleteTasks.length} task${incompleteTasks.length !== 1 ? 's' : ''} awaiting completion`,
     text: buildEmailText(member, incompleteTasks),
     html: buildEmailHTML(member, incompleteTasks),
   };
 
   await transporter.sendMail(mailOptions);
   console.log(
-    `[EmailService] ✅ Reminder sent to ${member.name} (${member.email}) — ${incompleteTasks.length} pending task(s)`
+    `[EmailService] Reminder sent to ${member.name} (${member.email}) — ${incompleteTasks.length} pending task(s)`
   );
   return true;
 };
 
 // ── Main exported function: check all members & send reminders ────────────────
 const sendPendingTaskReminders = async () => {
-  console.log('[EmailService] 🔍 Checking members with pending tasks...');
+  console.log('[EmailService] Checking members with pending tasks...');
 
   try {
     if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.warn('[EmailService] ⚠️  EMAIL_USER or EMAIL_PASS is not set in .env. Skipping email job.');
+      console.warn('[EmailService] EMAIL_USER or EMAIL_PASS is not set in .env. Skipping email job.');
       return;
     }
 
@@ -448,7 +385,7 @@ const sendPendingTaskReminders = async () => {
 
     // Verify SMTP connection
     await transporter.verify();
-    console.log('[EmailService] 📬 SMTP connection verified.');
+    console.log('[EmailService] SMTP connection verified.');
 
     // Fetch all members (non-admin) from MongoDB
     const members = await User.find({ role: 'member' }).select('name email tasks');
@@ -464,19 +401,19 @@ const sendPendingTaskReminders = async () => {
           await sendPendingTasksReminder(member, transporter);
           emailsSent++;
         } catch (err) {
-          console.error(`[EmailService] ❌ Failed to send email to ${member.email}:`, err.message);
+          console.error(`[EmailService] Failed to send email to ${member.email}:`, err.message);
         }
       } else {
         membersSkipped++;
-        console.log(`[EmailService] ⏭️  Skipped ${member.name} — no pending tasks.`);
+        console.log(`[EmailService] Skipped ${member.name} — no pending tasks.`);
       }
     }
 
     console.log(
-      `[EmailService] 📊 Done. Emails sent: ${emailsSent} | Members skipped (no pending tasks): ${membersSkipped}`
+      `[EmailService] Done. Emails sent: ${emailsSent} | Members skipped (no pending tasks): ${membersSkipped}`
     );
   } catch (err) {
-    console.error('[EmailService] ❌ Email job failed:', err.message);
+    console.error('[EmailService] Email job failed:', err.message);
   }
 };
 
