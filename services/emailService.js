@@ -19,7 +19,14 @@ const createTransporter = () => {
 const buildEmailHTML = (member, incompleteTasks) => {
   const taskRows = incompleteTasks
     .map(
-      (task, index) => `
+      (task, index) => {
+        const isDormant = task.status !== 'in_progress';
+        const statusLabel = isDormant ? 'Dormant' : 'In Progress';
+        const statusStyle = isDormant
+          ? 'background: rgba(100,107,128,0.15); color: #a3a8b8; border: 1px solid rgba(100,107,128,0.3);'
+          : 'background: rgba(189,166,247,0.12); color: #d6c7fb; border: 1px solid rgba(189,166,247,0.3);';
+
+        return `
       <tr>
         <td style="
           padding: 14px 18px;
@@ -63,24 +70,29 @@ const buildEmailHTML = (member, incompleteTasks) => {
         ">
           <span style="
             display: inline-block;
-            background: rgba(88,207,173,0.1);
-            color: #58cfad;
-            border: 1px solid rgba(88,207,173,0.3);
+            ${statusStyle}
             border-radius: 999px;
             padding: 3px 14px;
             font-size: 11px;
             font-weight: 700;
             letter-spacing: 0.5px;
             text-transform: uppercase;
-          ">Pending</span>
+          ">${statusLabel}</span>
         </td>
-      </tr>`
+      </tr>`;
+      }
     )
     .join('');
 
   const firstName = member.name.split(' ')[0];
-  const taskCount = incompleteTasks.length;
+  // Only include tasks that are NOT completed
+  const pendingTasks = incompleteTasks.filter(t => t.status !== 'completed');
+  const taskCount = pendingTasks.length;
   const taskWord = taskCount === 1 ? 'task' : 'tasks';
+
+  // Count by sub-status for the summary
+  const dormantCount    = pendingTasks.filter(t => t.status === 'dormant').length;
+  const inProgressCount = pendingTasks.filter(t => t.status === 'in_progress').length;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -177,7 +189,8 @@ const buildEmailHTML = (member, incompleteTasks) => {
                 ">${firstName}</strong>,
               </p>
               <p style="margin: 0 0 28px; font-size: 14px; color: #a3a8b8; line-height: 1.7;">
-                You have <strong style="color: #bda6f7;">${taskCount} pending ${taskWord}</strong>.
+                You have <strong style="color: #bda6f7;">${taskCount} pending ${taskWord}</strong>
+                (${dormantCount} dormant, ${inProgressCount} in progress).
                 Every task you complete brings the whole team closer to success &mdash; you've got this!
               </p>
 
@@ -352,14 +365,14 @@ Please do not reply to this email. For support, contact your administrator.
 
 // ── Core: send reminder to a single member ────────────────────────────────────
 const sendPendingTasksReminder = async (member, transporter) => {
-  const incompleteTasks = member.tasks.filter((t) => t.status === 'incomplete');
+  const incompleteTasks = member.tasks.filter((t) => t.status !== 'completed');
 
   if (incompleteTasks.length === 0) return false;
 
   const mailOptions = {
     from: `"VitaSyn Team ToDo" <${process.env.EMAIL_USER}>`,
     to: member.email,
-    subject: `Pending Tasks Reminder - ${incompleteTasks.length} task${incompleteTasks.length !== 1 ? 's' : ''} awaiting completion`,
+    subject: `Pending Tasks Reminder - ${incompleteTasks.length} task${incompleteTasks.length !== 1 ? 's' : ''} awaiting completion (${member.tasks.filter(t=>t.status==='in_progress').length} in progress)`,
     text: buildEmailText(member, incompleteTasks),
     html: buildEmailHTML(member, incompleteTasks),
   };
@@ -394,7 +407,8 @@ const sendPendingTaskReminders = async () => {
     let membersSkipped = 0;
 
     for (const member of members) {
-      const pendingCount = member.tasks.filter((t) => t.status === 'incomplete').length;
+      // Only email members with at least one pending (non-completed) task
+      const pendingCount = member.tasks.filter((t) => t.status !== 'completed').length;
 
       if (pendingCount > 0) {
         try {

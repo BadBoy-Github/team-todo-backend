@@ -15,6 +15,19 @@ const generateUserId = () => {
 router.get('/', auth, async (req, res) => {
   try {
     const members = await User.find({ role: 'member' }).select('-password');
+    // Normalize any legacy 'incomplete' or missing task statuses to 'dormant'
+    for (const member of members) {
+      let changed = false;
+      for (const task of member.tasks) {
+        if (!task.status || task.status === 'incomplete') {
+          task.status = 'dormant';
+          changed = true;
+        }
+      }
+      if (changed) {
+        await member.save();
+      }
+    }
     res.json(members);
   } catch (err) {
     console.error(err.message);
@@ -133,7 +146,7 @@ router.post('/:id/tasks', [auth, admin], async (req, res) => {
     const newTask = {
       title,
       description,
-      status: 'incomplete'
+      status: 'dormant'
     };
 
     user.tasks.push(newTask);
@@ -172,13 +185,20 @@ router.put('/:id/tasks/:taskId', [auth, admin], async (req, res) => {
 
 // @route   PATCH /api/members/:id/tasks/:taskId/status
 // @desc    Update task status (Admin OR the member themselves)
+//          Accepts: status ('dormant' | 'in_progress' | 'completed')
+//          Optional: finalDescription (saved when marking completed)
 // @access  Private
 router.patch('/:id/tasks/:taskId/status', auth, async (req, res) => {
-  const { status } = req.body;
+  const { status, finalDescription } = req.body;
+
+  const validStatuses = ['dormant', 'in_progress', 'completed'];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ message: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
+  }
 
   try {
-    // Check if the user is the member the task belongs to
-    if (req.user.id !== req.params.id) {
+    // Allow admin OR the member themselves to update task status
+    if (req.user.role !== 'admin' && req.user.id !== req.params.id) {
       return res.status(403).json({ message: 'Not authorized to update this task' });
     }
 
@@ -189,6 +209,13 @@ router.patch('/:id/tasks/:taskId/status', auth, async (req, res) => {
     if (!task) return res.status(404).json({ message: 'Task not found' });
 
     task.status = status;
+
+    // Save finalDescription when completing; clear it when reverting
+    if (status === 'completed' && finalDescription !== undefined) {
+      task.finalDescription = finalDescription;
+    } else if (status !== 'completed') {
+      task.finalDescription = '';
+    }
 
     await user.save();
     res.json(user.tasks);

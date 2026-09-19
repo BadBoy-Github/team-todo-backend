@@ -10,8 +10,12 @@ const TaskSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['completed', 'incomplete'],
-    default: 'incomplete',
+    enum: ['dormant', 'in_progress', 'completed'],
+    default: 'dormant',
+  },
+  finalDescription: {
+    type: String,
+    default: '',
   },
 }, { timestamps: true });
 
