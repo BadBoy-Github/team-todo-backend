@@ -188,6 +188,7 @@ router.put('/:id/tasks/:taskId', [auth, admin], async (req, res) => {
 
     task.title = title || task.title;
     task.description = description || task.description;
+    task.updatedAt = new Date();
 
     await user.save();
     res.json(user.tasks);
@@ -223,6 +224,7 @@ router.patch('/:id/tasks/:taskId/status', auth, async (req, res) => {
     if (!task) return res.status(404).json({ message: 'Task not found' });
 
     task.status = status;
+    task.updatedAt = new Date();
 
     // Save finalDescription when completing; clear it when reverting
     if (status === 'completed' && finalDescription !== undefined) {
